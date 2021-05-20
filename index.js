@@ -102,9 +102,10 @@ function spawnEnemies() {
   }, 1000);
 }
 
-// loop for shotting projectiles from center
+// main loop
+let animationId; //to pause we have to create a seperate animate id
 function animate() {
-  requestAnimationFrame(animate);
+  animationId = requestAnimationFrame(animate);
   ctx.clearRect(0, 0, canvas.width, canvas.height); //to draw particles instead of lines
   player.draw();
   projectiles.forEach((projectile) => {
@@ -113,6 +114,13 @@ function animate() {
 
   enemies.forEach((enemy, index) => {
     enemy.update();
+
+    const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y); //get distance btw player & enemy
+
+    //end game
+    if (dist - enemy.radius - player.radius < 1) {
+      cancelAnimationFrame(animationId);
+    }
 
     projectiles.forEach((projectile, projectileIndex) => {
       //dectect collision

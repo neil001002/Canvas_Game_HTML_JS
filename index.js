@@ -146,7 +146,7 @@ function spawnEnemies() {
       y: Math.sin(angle),
     };
     enemies.push(new Enemy(x, y, radius, color, velocity));
-  }, 6000);
+  }, 1000);
 }
 
 // main loop

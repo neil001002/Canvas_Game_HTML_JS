@@ -8,6 +8,7 @@ const scoreEl = document.querySelector("#scoreEl");
 const startGameBtn = document.querySelector("#startGameBtn");
 const modalEl = document.querySelector("#modalEl");
 const bigScoreEl = document.querySelector("#bigScoreEl");
+const highScoreEl = document.querySelector("#highScoreEl");
 
 // Create a player
 class Player {
@@ -107,11 +108,21 @@ const x = canvas.width / 2;
 const y = canvas.height / 2;
 
 // Players call
-const player = new Player(x, y, 10, "white");
+let player = new Player(x, y, 10, "white");
+let projectiles = [];
+let enemies = [];
+let particles = [];
 
-const projectiles = [];
-const enemies = [];
-const particles = [];
+//reset game
+function init() {
+  player = new Player(x, y, 10, "white");
+  projectiles = [];
+  enemies = [];
+  particles = [];
+  score = 0;
+  scoreEl.innerHTML = score;
+  bigScoreEl.innerHTML = score;
+}
 
 // Enemies call
 function spawnEnemies() {
@@ -135,12 +146,13 @@ function spawnEnemies() {
       y: Math.sin(angle),
     };
     enemies.push(new Enemy(x, y, radius, color, velocity));
-  }, 1000);
+  }, 6000);
 }
 
 // main loop
 let animationId; //to pause we have to create a seperate animate id
 let score = 0;
+let highScore = 0;
 function animate() {
   animationId = requestAnimationFrame(animate);
   ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
@@ -226,6 +238,14 @@ function animate() {
             projectiles.splice(projectileIndex, 1);
           }, 0);
         }
+
+        //highscore feature
+        if (score > highScore) {
+          highScore = score;
+          highScoreEl.innerHTML = highScore;
+        } else {
+          highScoreEl.innerHTML = highScore;
+        }
       }
     });
   });
@@ -247,6 +267,7 @@ addEventListener("click", (event) => {
 });
 
 startGameBtn.addEventListener("click", () => {
+  init();
   animate();
   spawnEnemies();
   modalEl.style.display = "none";
